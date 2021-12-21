@@ -4,10 +4,11 @@
 // Includes network rules, application rules, threat intelligence, ips/ids, ...
 AzureDiagnostics
 | where Category == "AzureFirewallNetworkRule" or Category == "AzureFirewallApplicationRule" 
-// Define in time period in the query
-| where TimeGenerated > ago(7d)
 // Focus only on the IDS logs
 | where OperationName == "AzureFirewallIDSLog"
+// Define in time period in the query
+// Remove everthing after this if you are creating an alert.
+| where TimeGenerated > ago(7d)
 | extend msg_original = msg_s
 // normalize data so it's eassier to parse later
 | extend msg_s = replace(@'. Action: Deny. Reason: SNI TLS extension was missing.', @' to no_data:no_data. Action: Deny. Rule Collection: default behavior. Rule: SNI TLS extension missing', msg_s)
